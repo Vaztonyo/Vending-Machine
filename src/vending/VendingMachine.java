@@ -32,7 +32,7 @@ public class VendingMachine {
                 message = "\nType: " + key + ", Stock available: " + value + "\n";
             }
         } else {
-            throw new ProductNotFoundException();
+            throw new ProductNotFoundException("No Products in Vending Machine");
         }
 
         return message;
@@ -46,10 +46,10 @@ public class VendingMachine {
         boolean condition1 = product.getType().equals("SoftDrink") || product.getType().equals("SaltySnack") || product.getType().equals("Chocolate");
 
         if (!condition1){
-            throw new InvalidProductException();
+            throw new InvalidProductException("Invalid Product");
         } else {
             if (!stock.containsKey(product.getType())){
-                throw new ProductNotFoundException();
+                throw new ProductNotFoundException("Product not Found");
             } else {
                 for (Map.Entry<String, Integer> entry : stock.entrySet() ) {
                     if (entry.getValue() > 0){
@@ -64,20 +64,24 @@ public class VendingMachine {
 
     }
 
-    public static void main(String[] args) throws ProductNotFoundException {
+    public static void main(String[] args) {
         Product soft = new SoftDrink("Fanta");
         VendingMachine ven = new VendingMachine();
 
-        ven.stock.put("SoftDrink", 5);
-        System.out.println(ven.getStock());
-        ven.buy(soft);
-        ven.buy(soft);
-        ven.buy(soft);
-        ven.buy(soft);
-        ven.buy(soft);
-        ven.buy(soft);
-        System.out.println(ven.getStock());
-        System.out.println(ven.getStock());
+//        ven.stock.put("SoftDrink", 5);
+        try {
+            System.out.println(ven.getStock());
+        } catch (ProductNotFoundException e) {
+            e.printStackTrace();
+        }
+//        ven.buy(soft);
+//        ven.buy(soft);
+//        ven.buy(soft);
+//        ven.buy(soft);
+//        ven.buy(soft);
+//        ven.buy(soft);
+//        System.out.println(ven.getStock());
+//        System.out.println(ven.getStock());
 
     }
 }
