@@ -11,10 +11,16 @@ public class VendingMachine {
     public Map<String, Integer> stock = new HashMap<>();
 
     public void add(Product product, int newStock) {
-        if (stock.containsKey(product.getType())){
-            stock.computeIfPresent(product.getType(), (k,v)-> v += newStock);
+        boolean condition1 = product.getType().equals("SoftDrink") || product.getType().equals("SaltySnack") || product.getType().equals("Chocolate");
+
+        if (!condition1){
+            throw new InvalidProductException("That product is not a valid product for this vending machine");
         } else {
-            stock.put(product.getType(), newStock);
+            if (stock.containsKey(product.getType())){
+                stock.computeIfPresent(product.getType(), (k,v)-> v += newStock);
+            } else {
+                stock.put(product.getType(), newStock);
+            }
         }
     }
 
@@ -36,8 +42,14 @@ public class VendingMachine {
         return message;
     }
 
-    public void getStock(Product product){
-
+    public String getStock(Product product) throws ProductNotFoundException {
+        String message = "";
+        if (stock.containsKey(product.getType())){
+            message = product.getType() + " available stock: " + stock.get(product.getType());
+        }  else {
+            throw new ProductNotFoundException("No Products in Vending Machine");
+        }
+        return message;
     }
 
     public void buy(Product product) throws ProductNotFoundException, InvalidProductException {
@@ -70,14 +82,20 @@ public class VendingMachine {
 
     public static void main(String[] args) {
         Product soft = new SoftDrink("Fanta");
+        Product soft1 = new SoftDrink("Coke");
         VendingMachine ven = new VendingMachine();
 
         ven.add(soft, 5);
+        ven.add(soft1, 2);
+
         try {
             System.out.println(ven.getStock());
+            ven.buy(soft1);
+            System.out.println(ven.getStock(soft1));
         } catch (ProductNotFoundException e) {
             e.printStackTrace();
         }
+
 
     }
 }
