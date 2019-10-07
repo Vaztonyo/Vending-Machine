@@ -1,10 +1,8 @@
 package vending;
 
-import product_exceptions.InvalidProductException;
-import product_exceptions.ProductNotFoundException;
-import vending.products.Chocolate;
-import vending.products.Product;
-import vending.products.SoftDrink;
+import product_exceptions.*;
+import product_exceptions.sub_exceptions.*;
+import vending.products.*;
 
 import java.util.*;
 
@@ -48,9 +46,15 @@ public class VendingMachine {
         if (!condition1){
             throw new InvalidProductException("Invalid Product");
         } else {
-            if (!stock.containsKey(product.getType())){
-                throw new ProductNotFoundException("Product not Found");
-            } else {
+            if (product.getType().equals("SoftDrink") && !stock.containsKey(product.getType())){
+                throw new SoftDrinksOutOfStockException("No Soft Drinks In Vending Machine");
+            } else if (product.getType().equals("SaltySnack") && !stock.containsKey(product.getType())){
+                throw new SaltyCracksAllEatenException("No More Salty Snacks In Vending Machine");
+            }
+            else if (product.getType().equals("Chocolate") && !stock.containsKey(product.getType())){
+                throw new ChocolatesAllGone("No Chocolates Left In Vending Machine");
+            }
+            else {
                 for (Map.Entry<String, Integer> entry : stock.entrySet() ) {
                     if (entry.getValue() > 0){
                         stock.computeIfPresent(product.getType(), (k, v) -> v -= 1);
@@ -68,20 +72,12 @@ public class VendingMachine {
         Product soft = new SoftDrink("Fanta");
         VendingMachine ven = new VendingMachine();
 
-//        ven.stock.put("SoftDrink", 5);
+        ven.add(soft, 5);
         try {
             System.out.println(ven.getStock());
         } catch (ProductNotFoundException e) {
             e.printStackTrace();
         }
-//        ven.buy(soft);
-//        ven.buy(soft);
-//        ven.buy(soft);
-//        ven.buy(soft);
-//        ven.buy(soft);
-//        ven.buy(soft);
-//        System.out.println(ven.getStock());
-//        System.out.println(ven.getStock());
 
     }
 }
